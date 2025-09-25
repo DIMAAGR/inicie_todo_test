@@ -56,5 +56,40 @@
     "common_undo": "Undo",
     "common_cancel": "Cancel",
     "common_edit": "Edit",
-    "common_delete": "Delete"
+    "common_delete": "Delete",
+    "date_today": "Today at {time}",
+    "date_yesterday": "Yesterday at {time}",
+    "date_tomorrow": "Tomorrow at {time}",
+    "date_default": "{date} at {time}",
+    "@date_today": {
+        "placeholders": {
+            "time": {
+                "type": "String"
+            }
+        }
+    },
+    "@date_yesterday": {
+        "placeholders": {
+            "time": {
+                "type": "String"
+            }
+        }
+    },
+    "@date_tomorrow": {
+        "placeholders": {
+            "time": {
+                "type": "String"
+            }
+        }
+    },
+    "@date_default": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            },
+            "time": {
+                "type": "String"
+            }
+        }
+    }
 }

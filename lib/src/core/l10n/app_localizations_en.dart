@@ -121,4 +121,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get common_delete => 'Delete';
+
+  @override
+  String date_today(String time) {
+    return 'Today at $time';
+  }
+
+  @override
+  String date_yesterday(String time) {
+    return 'Yesterday at $time';
+  }
+
+  @override
+  String date_tomorrow(String time) {
+    return 'Tomorrow at $time';
+  }
+
+  @override
+  String date_default(String date, String time) {
+    return '$date at $time';
+  }
 }

@@ -56,5 +56,40 @@
     "common_undo": "Deshacer",
     "common_cancel": "Cancelar",
     "common_edit": "Editar",
-    "common_delete": "Eliminar"
+    "common_delete": "Eliminar",
+    "date_today": "Hoy a las {time}",
+    "date_yesterday": "Ayer a las {time}",
+    "date_tomorrow": "Mañana a las {time}",
+    "date_default": "{date} a las {time}",
+    "@date_today": {
+        "placeholders": {
+            "time": {
+                "type": "String"
+            }
+        }
+    },
+    "@date_yesterday": {
+        "placeholders": {
+            "time": {
+                "type": "String"
+            }
+        }
+    },
+    "@date_tomorrow": {
+        "placeholders": {
+            "time": {
+                "type": "String"
+            }
+        }
+    },
+    "@date_default": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            },
+            "time": {
+                "type": "String"
+            }
+        }
+    }
 }

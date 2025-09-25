@@ -1,22 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:inicie_todo_test/src/core/presentation/extensions/l10n_ext.dart';
 import 'package:intl/intl.dart';
 
 extension DateExt on DateTime {
-  String formatRelative() {
+  String formatRelative(BuildContext context) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final date = DateTime(year, month, day);
 
     final timeFormat = DateFormat('HH:mm');
     final dateFormat = DateFormat('dd/MM/yy');
+    final l10n = context.l10n;
+
+    final time = timeFormat.format(this);
 
     if (date == today) {
-      return 'Hoje às ${timeFormat.format(this)}';
+      return l10n.date_today(time);
     } else if (date == today.subtract(const Duration(days: 1))) {
-      return 'Ontem às ${timeFormat.format(this)}';
+      return l10n.date_yesterday(time);
     } else if (date == today.add(const Duration(days: 1))) {
-      return 'Amanhã às ${timeFormat.format(this)}';
+      return l10n.date_tomorrow(time);
     } else {
-      return '${dateFormat.format(this)} às ${timeFormat.format(this)}';
+      return l10n.date_default(dateFormat.format(this), time);
     }
   }
 
@@ -49,6 +54,4 @@ extension DateExt on DateTime {
     final now = DateTime.now();
     return isBefore(now);
   }
-
-  
 }

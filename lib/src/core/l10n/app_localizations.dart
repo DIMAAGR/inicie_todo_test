@@ -315,6 +315,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get common_delete;
+
+  /// No description provided for @date_today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today at {time}'**
+  String date_today(String time);
+
+  /// No description provided for @date_yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday at {time}'**
+  String date_yesterday(String time);
+
+  /// No description provided for @date_tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow at {time}'**
+  String date_tomorrow(String time);
+
+  /// No description provided for @date_default.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} at {time}'**
+  String date_default(String date, String time);
 }
 
 class _AppLocalizationsDelegate

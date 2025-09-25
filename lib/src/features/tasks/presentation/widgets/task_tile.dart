@@ -102,7 +102,7 @@ class TaskTile extends StatelessWidget {
             Icon(Icons.calendar_today_outlined, size: 12, color: dateColor),
             const SizedBox(width: 4),
             Text(
-              date != null ? date!.formatRelative() : context.l10n.task_no_due_date,
+              date != null ? date!.formatRelative(context) : context.l10n.task_no_due_date,
               style: AppTextStyles.caption.copyWith(color: dateColor),
             ),
           ],
