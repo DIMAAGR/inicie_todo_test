@@ -81,7 +81,7 @@ class _TasksListViewState extends State<TasksListView> {
 
         return shouldAnimate
             ? FadeIn(
-                delay: Duration(milliseconds: 400 + index * 100),
+                delay: Duration(milliseconds: 400 + (index * 100)),
                 child: tile,
               )
             : tile;

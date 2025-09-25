@@ -17,6 +17,37 @@ abstract class AppTheme {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: Colors.white,
+        textStyle: AppTextStyles.body1Regular,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: colors.background,
+        foregroundColor: colors.textPrimary,
+        elevation: 0,
+        centerTitle: false,
+      ),
+    );
+  }
+
+  static ThemeData dark() {
+    final colors = AppColorsDark();
+    return ThemeData(
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: colors.background,
+      primaryColor: colors.primary,
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: colors.primary,
+          textStyle: AppTextStyles.button,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: Color(0xFF202020),
+        textStyle: AppTextStyles.body1Regular.copyWith(color: colors.textPrimary),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: colors.background,
         foregroundColor: colors.textPrimary,

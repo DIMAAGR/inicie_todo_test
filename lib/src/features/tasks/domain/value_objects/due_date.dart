@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:inicie_todo_test/src/core/failures/failures.dart';
-import 'package:intl/intl.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
+import 'package:inicie_todo_test/src/core/failures/failures.dart';
 
 final _dfDate = DateFormat('dd/MM/yyyy');
 final _dfTime = DateFormat('HH:mm');
@@ -39,43 +39,43 @@ final class DueDate extends Equatable {
     final dateRaw = (date ?? '').trim();
     final timeRaw = (time ?? '').trim();
 
-    if (dateRaw.isEmpty && timeRaw.isEmpty) return Right(DueDate._(null));
+    if (dateRaw.isEmpty && timeRaw.isEmpty) {
+      return Right(const DueDate._(null));
+    }
 
     var baseDate = _todayAtMidnight();
 
     if (dateRaw.isNotEmpty) {
       if (!_isCompleteDate(dateRaw)) {
-        return Left(const ValidationFailure('invalid_date_format'));
+        return const Left(ValidationFailure('invalid_date_format'));
       }
       final parsedDate = _parseDateStrict(dateRaw);
       if (parsedDate == null) {
-        return Left(const ValidationFailure('invalid_date'));
+        return const Left(ValidationFailure('invalid_date'));
       }
-      if (parsedDate.isBefore(baseDate)) {
-        return Left(const ValidationFailure('date_before_today'));
+      if (forbidPast && parsedDate.isBefore(baseDate)) {
+        return const Left(ValidationFailure('date_before_today'));
       }
       baseDate = parsedDate;
     }
 
     if (timeRaw.isEmpty) {
-      return Right(
-        DueDate._(
-          DateTime(baseDate.year, baseDate.month, baseDate.day, 23, 59),
-        ),
-      );
+      final candidate = DateTime(baseDate.year, baseDate.month, baseDate.day, 23, 59);
+      return Right(DueDate._(candidate));
     }
 
     if (!_isCompleteTime(timeRaw)) {
-      return Left(const ValidationFailure('invalid_time_format'));
+      return const Left(ValidationFailure('invalid_time_format'));
     }
     final parsedTime = _parseTimeOnDateStrict(timeRaw, baseDate);
     if (parsedTime == null) {
-      return Left(const ValidationFailure('invalid_time'));
+      return const Left(ValidationFailure('invalid_time'));
     }
 
-    if (baseDate.isAtSameMomentAs(_todayAtMidnight()) &&
-        parsedTime.isBefore(DateTime.now())) {
-      return Left(const ValidationFailure('time_before_now'));
+    if (forbidPast && baseDate.isAtSameMomentAs(_todayAtMidnight())) {
+      if (parsedTime.isBefore(DateTime.now())) {
+        return const Left(ValidationFailure('time_before_now'));
+      }
     }
 
     return Right(DueDate._(parsedTime));
@@ -84,6 +84,14 @@ final class DueDate extends Equatable {
   factory DueDate.fromEpochMs(int? epochMs) {
     if (epochMs == null) return const DueDate._(null);
     return DueDate._(DateTime.fromMillisecondsSinceEpoch(epochMs));
+  }
+
+  int? toEpochMs() => value?.millisecondsSinceEpoch;
+
+  bool get hasDate => value != null;
+  bool get isOverdue {
+    if (value == null) return false;
+    return value!.isBefore(DateTime.now());
   }
 
   @override
