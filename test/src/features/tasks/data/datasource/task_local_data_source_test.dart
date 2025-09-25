@@ -50,10 +50,7 @@ void main() {
     });
 
     test('parseia JSON válido para lista de TaskModel', () async {
-      final list = [
-        sample(id: '1').toJson(),
-        sample(id: '2', title: 'Outra').toJson(),
-      ];
+      final list = [sample(id: '1').toJson(), sample(id: '2', title: 'Outra').toJson()];
       when(store.getString(key)).thenReturn(jsonEncode(list));
 
       final result = await ds.getAllTasks();
@@ -74,8 +71,7 @@ void main() {
 
       await ds.saveAllTasks(models);
 
-      final captured =
-          verify(store.setString(key, captureAny)).captured.single as String;
+      final captured = verify(store.setString(key, captureAny)).captured.single as String;
       final decoded = jsonDecode(captured) as List<dynamic>;
       expect(decoded, isA<List>());
       expect(decoded.length, 2);
@@ -109,17 +105,15 @@ void main() {
       verifyNoMoreInteractions(store);
     });
 
-    test(
-      'lança StateError quando id não existe (comportamento atual)',
-      () async {
-        final list = [sample(id: '1').toJson()];
-        when(store.getString(key)).thenReturn(jsonEncode(list));
+    test('retorna null quando id não existe', () async {
+      final list = [sample(id: 'zzz').toJson()];
+      when(store.getString(key)).thenReturn(jsonEncode(list));
 
-        expect(ds.getTaskById('zzz'), throwsA(isA<StateError>()));
+      final res = await ds.getTaskById('nao_existe');
+      expect(res, isNull);
 
-        verify(store.getString(key)).called(1);
-        verifyNoMoreInteractions(store);
-      },
-    );
+      verify(store.getString(key)).called(1);
+      verifyNoMoreInteractions(store);
+    });
   });
 }

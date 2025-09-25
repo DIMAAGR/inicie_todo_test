@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inicie_todo_test/src/core/presentation/commands/pending_undo_command_controller.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/color_ext.dart';
+import 'package:inicie_todo_test/src/core/presentation/extensions/l10n_ext.dart';
 import 'package:inicie_todo_test/src/core/routes/app_routes.dart';
 import 'package:inicie_todo_test/src/core/state/view_model_state.dart';
 import 'package:inicie_todo_test/src/features/home/presentation/view_model/home_view_model.dart';
@@ -69,7 +70,7 @@ class _TasksListTabState extends ConsumerState<TasksListTab> {
         await pendingController.start(
           context: context,
           command: cmd,
-          message: 'success_delete_task',
+          message: context.l10n.msg_tasks_deleted(1),
         );
       },
     );

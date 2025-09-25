@@ -47,14 +47,14 @@ final class DueDate extends Equatable {
 
     if (dateRaw.isNotEmpty) {
       if (!_isCompleteDate(dateRaw)) {
-        return const Left(ValidationFailure('invalid_date_format'));
+        return const Left(ValidationFailure('error_invalid_date_format'));
       }
       final parsedDate = _parseDateStrict(dateRaw);
       if (parsedDate == null) {
-        return const Left(ValidationFailure('invalid_date'));
+        return const Left(ValidationFailure('error_invalid_date'));
       }
       if (forbidPast && parsedDate.isBefore(baseDate)) {
-        return const Left(ValidationFailure('date_before_today'));
+        return const Left(ValidationFailure('error_date_before_today'));
       }
       baseDate = parsedDate;
     }
@@ -65,16 +65,16 @@ final class DueDate extends Equatable {
     }
 
     if (!_isCompleteTime(timeRaw)) {
-      return const Left(ValidationFailure('invalid_time_format'));
+      return const Left(ValidationFailure('error_invalid_time_format'));
     }
     final parsedTime = _parseTimeOnDateStrict(timeRaw, baseDate);
     if (parsedTime == null) {
-      return const Left(ValidationFailure('invalid_time'));
+      return const Left(ValidationFailure('error_invalid_time'));
     }
 
     if (forbidPast && baseDate.isAtSameMomentAs(_todayAtMidnight())) {
       if (parsedTime.isBefore(DateTime.now())) {
-        return const Left(ValidationFailure('time_before_now'));
+        return const Left(ValidationFailure('error_time_before_now'));
       }
     }
 

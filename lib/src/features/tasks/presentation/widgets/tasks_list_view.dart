@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/color_ext.dart';
+import 'package:inicie_todo_test/src/core/presentation/extensions/l10n_ext.dart';
 import 'package:inicie_todo_test/src/core/presentation/widgets/fade_in.dart';
 import 'package:inicie_todo_test/src/core/theme/app_text_styles.dart';
 import 'package:inicie_todo_test/src/features/tasks/domain/entities/task_entity.dart';
@@ -41,7 +42,7 @@ class _TasksListViewState extends State<TasksListView> {
         delay: Duration(milliseconds: 500),
         child: Center(
           child: Text(
-            'no_have_tasks',
+            context.l10n.home_empty,
             style: AppTextStyles.subtitle1Medium.copyWith(
               color: Theme.of(context).colors.textPrimary,
             ),

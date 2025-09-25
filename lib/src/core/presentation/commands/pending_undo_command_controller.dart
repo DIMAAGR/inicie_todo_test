@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/color_ext.dart';
+import 'package:inicie_todo_test/src/core/presentation/extensions/l10n_ext.dart';
 import 'undo_command.dart';
 
 class PendingCommandController {
@@ -11,9 +12,10 @@ class PendingCommandController {
     required UndoCommand command,
     required String message,
 
-    String undoLabel = 'undo',
+    String? undoLabel,
     Duration duration = const Duration(seconds: 4),
   }) async {
+    undoLabel ??= context.l10n.common_undo;
     await _commitIfAny();
 
     _pending = command;
@@ -22,10 +24,7 @@ class PendingCommandController {
       _snack = ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).colors.textSecondary,
-          content: Text(
-            message,
-            style: TextStyle(color: Theme.of(context).colors.textLight),
-          ),
+          content: Text(message, style: TextStyle(color: Theme.of(context).colors.textLight)),
           duration: duration,
           action: SnackBarAction(
             textColor: Theme.of(context).colors.textLight,
