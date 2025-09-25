@@ -1,0 +1,60 @@
+{
+    "@@locale": "es",
+    "app_title": "Inicie To-do",
+    "home_welcome": "Bienvenido a\nInicie To-do!",
+    "home_tab_all": "Todas las tareas",
+    "home_tab_pending": "Pendientes",
+    "home_tab_completed": "Completadas",
+    "home_empty": "No se encontraron tareas",
+    "home_selected_count": "{count} seleccionada(s)",
+    "@home_selected_count": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "home_cancel_selection": "Cancelar selección",
+    "home_menu_edit": "Editar",
+    "home_menu_delete": "Eliminar",
+    "task_new_title": "Crear nueva tarea",
+    "task_edit_title": "Editar tarea",
+    "task_field_title": "Título",
+    "task_field_title_hint": "Ingrese el título",
+    "task_field_date": "Fecha (Opcional)",
+    "task_field_time": "Hora (Opcional)",
+    "task_button_save": "Guardar",
+    "task_no_due_date": "Sin fecha límite",
+    "msg_task_created": "Tarea creada con éxito",
+    "msg_task_updated": "Tarea actualizada con éxito",
+    "msg_tasks_deleted": "{count} tarea(s) eliminada(s)",
+    "@msg_tasks_deleted": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "error_generic": "Ocurrió un error",
+    "error_title_required": "El título es obligatorio",
+    "error_invalid_date_format": "Fecha incompleta (use dd/mm/aaaa)",
+    "error_invalid_date": "Fecha inválida",
+    "error_date_before_today": "La fecha no puede ser anterior a hoy",
+    "error_invalid_time_format": "Hora incompleta (use HH:mm)",
+    "error_invalid_time": "Hora inválida",
+    "error_time_before_now": "La hora no puede ser anterior a la actual",
+    "error_task_not_found": "Tarea no encontrada",
+    "error_max_length": "Máximo {max} caracteres",
+    "@error_max_length": {
+        "placeholders": {
+            "max": {
+                "type": "int"
+            }
+        }
+    },
+    "common_save": "Guardar",
+    "common_undo": "Deshacer",
+    "common_cancel": "Cancelar",
+    "common_edit": "Editar",
+    "common_delete": "Eliminar"
+}

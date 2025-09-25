@@ -1,0 +1,60 @@
+{
+    "@@locale": "pt",
+    "app_title": "Inicie To-do",
+    "home_welcome": "Bem Vindo ao\nInicie To-do!",
+    "home_tab_all": "Todas as Tarefas",
+    "home_tab_pending": "Pendentes",
+    "home_tab_completed": "Concluídas",
+    "home_empty": "Nenhuma tarefa encontrada",
+    "home_selected_count": "{count} selecionada(s)",
+    "@home_selected_count": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "home_cancel_selection": "Cancelar seleção",
+    "home_menu_edit": "Editar",
+    "home_menu_delete": "Apagar",
+    "task_new_title": "Criar nova tarefa",
+    "task_edit_title": "Editar tarefa",
+    "task_field_title": "Título",
+    "task_field_title_hint": "Digite o título",
+    "task_field_date": "Data (Opcional)",
+    "task_field_time": "Hora (Opcional)",
+    "task_button_save": "Salvar",
+    "task_no_due_date": "Nenhuma data definida",
+    "msg_task_created": "Tarefa criada com sucesso",
+    "msg_task_updated": "Tarefa atualizada com sucesso",
+    "msg_tasks_deleted": "{count} tarefa(s) excluída(s)",
+    "@msg_tasks_deleted": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "error_generic": "Ocorreu um erro",
+    "error_title_required": "Título é obrigatório",
+    "error_invalid_date_format": "Data incompleta (use dd/mm/aaaa)",
+    "error_invalid_date": "Data inválida",
+    "error_date_before_today": "A data não pode ser anterior a hoje",
+    "error_invalid_time_format": "Hora incompleta (use HH:mm)",
+    "error_invalid_time": "Hora inválida",
+    "error_time_before_now": "O horário não pode ser anterior ao atual",
+    "error_task_not_found": "Tarefa não encontrada",
+    "error_max_length": "Máx {max} caracteres",
+    "@error_max_length": {
+        "placeholders": {
+            "max": {
+                "type": "int"
+            }
+        }
+    },
+    "common_save": "Salvar",
+    "common_undo": "Desfazer",
+    "common_cancel": "Cancelar",
+    "common_edit": "Editar",
+    "common_delete": "Apagar"
+}

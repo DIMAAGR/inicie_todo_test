@@ -29,42 +29,42 @@ DateTime _todayAtMidnight() {
 }
 
 String? validateTitle(String? v) {
-  if (v == null || v.trim().isEmpty) return 'title_is_required';
+  if (v == null || v.trim().isEmpty) return 'error_title_required';
   return null;
 }
 
 String? validateDate(String? s) {
   if (s == null || s.trim().isEmpty) return null;
 
-  if (!_isCompleteDate(s)) return 'date_incomplete';
+  if (!_isCompleteDate(s)) return 'error_invalid_date_format';
 
   final d = _parseDateStrict(s);
-  if (d == null) return 'date_invalid';
+  if (d == null) return 'error_invalid_date';
 
-  if (d.isBefore(_todayAtMidnight())) return 'date_cannot_be_in_the_past';
+  if (d.isBefore(_todayAtMidnight())) return 'error_date_before_today';
   return null;
 }
 
 String? validateTime(String? timeStr, {String? dateStr}) {
   if (timeStr == null || timeStr.trim().isEmpty) return null;
 
-  if (!_isCompleteTime(timeStr)) return 'time_incomplete';
+  if (!_isCompleteTime(timeStr)) return 'error_invalid_time_format';
 
   DateTime baseDate;
   if (dateStr != null && dateStr.trim().isNotEmpty && _isCompleteDate(dateStr)) {
     final d = _parseDateStrict(dateStr);
-    if (d == null) return 'date_invalid';
+    if (d == null) return 'error_invalid_time';
     baseDate = d;
   } else {
     baseDate = _todayAtMidnight();
   }
 
   final dt = _parseTimeOnDateStrict(timeStr, baseDate);
-  if (dt == null) return 'time_invalid';
+  if (dt == null) return 'error_invalid_time';
 
   final now = DateTime.now();
   if (DateTime(baseDate.year, baseDate.month, baseDate.day).isAtSameMomentAs(_todayAtMidnight())) {
-    if (dt.isBefore(now)) return 'time_cannot_be_in_the_past';
+    if (dt.isBefore(now)) return 'error_time_before_now';
   }
   return null;
 }

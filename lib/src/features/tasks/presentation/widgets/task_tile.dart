@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/color_ext.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/date_ext.dart';
+import 'package:inicie_todo_test/src/core/presentation/extensions/l10n_ext.dart';
 import 'package:inicie_todo_test/src/core/theme/app_text_styles.dart';
 
 class TaskTile extends StatelessWidget {
@@ -101,7 +102,7 @@ class TaskTile extends StatelessWidget {
             Icon(Icons.calendar_today_outlined, size: 12, color: dateColor),
             const SizedBox(width: 4),
             Text(
-              date != null ? date!.formatRelative() : 'no_due_date',
+              date != null ? date!.formatRelative() : context.l10n.task_no_due_date,
               style: AppTextStyles.caption.copyWith(color: dateColor),
             ),
           ],
@@ -116,9 +117,15 @@ class TaskTile extends StatelessWidget {
             }
           },
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'edit',
-              child: Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 8), Text('edit')]),
+              child: Row(
+                children: [
+                  Icon(Icons.edit, size: 18),
+                  SizedBox(width: 8),
+                  Text(context.l10n.common_edit),
+                ],
+              ),
             ),
             PopupMenuItem(
               value: 'delete',
@@ -127,7 +134,7 @@ class TaskTile extends StatelessWidget {
                   Icon(Icons.delete, size: 18, color: Theme.of(context).colors.error),
                   SizedBox(width: 8),
                   Text(
-                    'delete',
+                    context.l10n.common_delete,
                     style: AppTextStyles.body2Regular.copyWith(
                       color: Theme.of(context).colors.error,
                     ),

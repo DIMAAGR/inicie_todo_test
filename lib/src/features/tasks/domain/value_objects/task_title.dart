@@ -11,10 +11,10 @@ final class TaskTitle extends Equatable {
   static Either<Failure, TaskTitle> create(String raw) {
     final text = raw.trim();
     if (text.isEmpty) {
-      return Left(const ValidationFailure('title_required'));
+      return Left(const ValidationFailure('error_title_required'));
     }
     if (text.length > maxLen) {
-      return Left(ValidationFailure('max_length'));
+      return Left(ValidationFailure('error_max_length'));
     }
     return Right(TaskTitle._(text));
   }

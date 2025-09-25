@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inicie_todo_test/src/core/failures/failures.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/color_ext.dart';
+import 'package:inicie_todo_test/src/core/presentation/extensions/l10n_ext.dart';
 import 'package:inicie_todo_test/src/core/presentation/masks/masks.dart';
 import 'package:inicie_todo_test/src/core/presentation/validators/validators.dart';
 import 'package:inicie_todo_test/src/core/state/view_model_state.dart';
@@ -61,7 +62,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(CustomSnackbars.success(context, 'task_created_successfully'));
+          ).showSnackBar(CustomSnackbars.success(context, context.l10n.msg_task_created));
           if (context.mounted) context.pop(true);
         });
       }
@@ -70,7 +71,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(CustomSnackbars.success(context, 'task_updated_successfully'));
+          ).showSnackBar(CustomSnackbars.success(context, context.l10n.msg_task_updated));
           if (context.mounted) context.pop(true);
         });
       }
@@ -156,7 +157,7 @@ class _TaskViewState extends ConsumerState<TaskView> {
                   }
                 }
               },
-              child: Text('save'),
+              child: Text(context.l10n.common_save),
             ),
           ),
         ],
@@ -173,7 +174,9 @@ class _TaskViewState extends ConsumerState<TaskView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.id != null ? 'edit_task' : 'create_a_new_task',
+                      widget.id != null
+                          ? context.l10n.task_edit_title
+                          : context.l10n.task_new_title,
                       style: AppTextStyles.h5,
                     ),
                     SizedBox(height: 16),
@@ -183,25 +186,64 @@ class _TaskViewState extends ConsumerState<TaskView> {
                         children: [
                           TaskTextFormField(
                             controller: _titleController,
-                            titleText: 'task_title',
-                            hintText: 'task_title_hint',
-                            validator: validateTitle,
+                            titleText: context.l10n.task_field_title,
+                            hintText: context.l10n.task_field_title_hint,
+                            validator: (s) {
+                              final v = validateTitle(s);
+                              if (v != null) {
+                                switch (v) {
+                                  case 'error_title_required':
+                                    return context.l10n.error_title_required;
+                                  case 'error_max_length':
+                                    return context.l10n.error_max_length(200);
+                                  default:
+                                    return null;
+                                }
+                              }
+                              return null;
+                            },
                           ),
                           SizedBox(height: 24),
                           TaskTextFormField(
                             controller: _dateController,
-                            titleText: 'optional_due_date',
+                            titleText: context.l10n.task_field_date,
                             hintText: 'DD/MM/AAAA',
                             inputMask: TextInputDateFormatter.dateMask,
-                            validator: validateDate,
+                            validator: (s) {
+                              final v = validateDate(s);
+                              if (v != null) {
+                                switch (v) {
+                                  case 'error_invalid_date_format':
+                                    return context.l10n.error_invalid_date_format;
+                                  case 'error_invalid_date':
+                                    return context.l10n.error_invalid_date;
+                                  case 'error_date_before_today':
+                                    return context.l10n.error_date_before_today;
+                                }
+                              }
+                              return null;
+                            },
                           ),
                           SizedBox(height: 24),
                           TaskTextFormField(
                             controller: _timeController,
-                            titleText: 'Hora (Opcional)',
+                            titleText: context.l10n.task_field_time,
                             hintText: 'HH:MM',
                             inputMask: TextInputDateFormatter.timeMask,
-                            validator: (s) => validateTime(s, dateStr: _dateController.text),
+                            validator: (s) {
+                              final v = validateTime(s, dateStr: _dateController.text);
+                              if (v != null) {
+                                switch (v) {
+                                  case 'error_invalid_time_format':
+                                    return context.l10n.error_invalid_time_format;
+                                  case 'error_invalid_time':
+                                    return context.l10n.error_invalid_time;
+                                  case 'error_time_before_now':
+                                    return context.l10n.error_time_before_now;
+                                }
+                              }
+                              return null;
+                            },
                           ),
                         ],
                       ),

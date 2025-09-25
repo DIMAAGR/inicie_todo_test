@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inicie_todo_test/src/core/failures/failures.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/color_ext.dart';
+import 'package:inicie_todo_test/src/core/presentation/extensions/l10n_ext.dart';
 import 'package:inicie_todo_test/src/core/presentation/widgets/fade_in.dart';
 import 'package:inicie_todo_test/src/core/routes/app_routes.dart';
 import 'package:inicie_todo_test/src/core/state/view_model_state.dart';
@@ -93,7 +94,7 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: Text(
-                  'wellcome_to_task_to_do',
+                  context.l10n.home_welcome,
                   style: AppTextStyles.h5.copyWith(color: Theme.of(context).colors.textPrimary),
                 ),
               ),
@@ -118,14 +119,18 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
                       child: AnimatedTabLabel(
                         controller: _controller,
                         index: 0,
-                        title: 'all_tasks',
+                        title: context.l10n.home_tab_all,
                       ),
                     ),
                   ),
                   Tab(
                     child: FadeIn(
                       delay: Duration(milliseconds: 600),
-                      child: AnimatedTabLabel(controller: _controller, index: 1, title: 'pending'),
+                      child: AnimatedTabLabel(
+                        controller: _controller,
+                        index: 1,
+                        title: context.l10n.home_tab_pending,
+                      ),
                     ),
                   ),
                   Tab(
@@ -134,7 +139,7 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
                       child: AnimatedTabLabel(
                         controller: _controller,
                         index: 2,
-                        title: 'completed',
+                        title: context.l10n.home_tab_completed,
                       ),
                     ),
                   ),
@@ -150,21 +155,21 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
                     notifier: notifier,
                     vm: vm,
                     list: vm.allTasks,
-                    title: 'all_tasks',
+                    title: context.l10n.home_tab_all,
                     key: const PageStorageKey('tab_all'),
                   ),
                   TasksListTab(
                     notifier: notifier,
                     vm: vm,
                     list: vm.pendingTasks,
-                    title: 'pending',
+                    title: context.l10n.home_tab_pending,
                     key: const PageStorageKey('tab_pending'),
                   ),
                   TasksListTab(
                     notifier: notifier,
                     vm: vm,
                     list: vm.completedTasks,
-                    title: 'completed',
+                    title: context.l10n.home_tab_completed,
                     key: const PageStorageKey('tab_completed'),
                   ),
                 ],
