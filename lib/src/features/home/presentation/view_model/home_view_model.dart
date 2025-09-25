@@ -33,15 +33,6 @@ class HomeViewModel extends Notifier<HomeViewModelState> {
   // TABS
   // --------------------------------------------------
 
-  void setTab(HomeTab tab) {
-    final strategy = switch (tab) {
-      HomeTab.all => AllTasksFilter(),
-      HomeTab.pending => PendingTasksFilter(),
-      HomeTab.completed => CompletedTasksFilter(),
-    };
-    state = state.copyWith(currentTab: tab, filter: strategy);
-  }
-
   void setFilter(TaskFilterStrategy filter) {
     state = state.copyWith(filter: filter);
   }

@@ -53,8 +53,20 @@ Na apresentação, `Either` é convertido para estados de UI (`Loading/Success/E
 - **Adapter** (DataSource (Infra)): encapsula SDKs (Firestore, Local Notifications) atrás de interfaces.
 - **Value Object** (Domínio): tipos para valores com validação embutida (ex.: `TaskTitle`, `DueDate`).
 
+### Performance
+- Uso de `compute` para serialização/deserialização JSON em isolates.
+- Evita travar o main thread em listas grandes.
+- Estratégia simples mas escalável (offline-first + sync no futuro).
+
 ## Futuro
 
 - Offline-first (migrar repo impl para local/remote + sync).
 - Firebase (auth, firestore, fcm) via providers de infra (troca sem afetar UI).
 - Notificações locais → `core/services/notifications` ou `features/notifications` se houver UI própria.
+
+## Como rodar
+
+```bash
+flutter pub get
+flutter run
+```

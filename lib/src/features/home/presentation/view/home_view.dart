@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inicie_todo_test/src/core/failures/failures.dart';
-import 'package:inicie_todo_test/src/core/presentation/commands/pending_undo_command_controller.dart';
 import 'package:inicie_todo_test/src/core/presentation/extensions/color_ext.dart';
 import 'package:inicie_todo_test/src/core/presentation/widgets/fade_in.dart';
 import 'package:inicie_todo_test/src/core/routes/app_routes.dart';
@@ -10,9 +9,21 @@ import 'package:inicie_todo_test/src/core/state/view_model_state.dart';
 import 'package:inicie_todo_test/src/core/theme/app_text_styles.dart';
 import 'package:inicie_todo_test/src/features/home/presentation/view_model/home_view_model.dart';
 import 'package:inicie_todo_test/src/features/home/presentation/view_model/home_view_model_state.dart';
+import 'package:inicie_todo_test/src/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:inicie_todo_test/src/features/home/presentation/widgets/tab_title.dart';
-import 'package:inicie_todo_test/src/features/tasks/presentation/commands/delete_commands.dart';
-import 'package:inicie_todo_test/src/features/tasks/presentation/widgets/tasks_list_view.dart';
+import 'package:inicie_todo_test/src/features/home/presentation/widgets/tasks_list_tab.dart';
+import 'package:inicie_todo_test/src/features/tasks/presentation/widgets/custom_snackbars.dart';
+
+final homeErrorProvider = Provider<Failure?>((ref) {
+  final s = ref.watch(homeViewModelProvider);
+  Failure? pick(ViewModelState<Failure, dynamic> st) =>
+      st is ErrorState<Failure, dynamic> ? st.error : null;
+
+  return pick(s.tasksState) ??
+      pick(s.updateTaskState) ??
+      pick(s.deleteOneState) ??
+      pick(s.deleteRangeState);
+});
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -34,10 +45,11 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
 
     _controller.addListener(() {
       if (_controller.indexIsChanging) return;
-      ref.read(homeViewModelProvider.notifier).setTab(_indexToTab(_controller.index));
     });
 
-    ref.read(homeViewModelProvider.notifier).loadAllData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(homeViewModelProvider.notifier).loadAllData();
+    });
   }
 
   @override
@@ -52,53 +64,6 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
     HomeTab.completed => 2,
   };
 
-  HomeTab _indexToTab(int index) => switch (index) {
-    0 => HomeTab.all,
-    1 => HomeTab.pending,
-    _ => HomeTab.completed,
-  };
-
-  Future<void> onDelete(HomeViewModel vm, String id) async {
-    final pendingController = PendingCommandController();
-    final cmd = DeleteOneCommand(
-      removeByIdOptimistic: vm.removeByIdOptimistic,
-      restoreTasks: vm.restoreTasks,
-      commitDeleteOne: vm.commitDeleteOne,
-      id: id,
-    );
-
-    await pendingController.start(context: context, command: cmd, message: 'success_delete_task');
-  }
-
-  void onEdit(String id) {
-    context.goNamed(AppRoutes.editTask, pathParameters: {'id': id});
-  }
-
-  final homeErrorProvider = Provider<Failure?>((ref) {
-    final s = ref.watch(homeViewModelProvider);
-    Failure? pickError(ViewModelState<Failure, dynamic> st) =>
-        st is ErrorState<Failure, dynamic> ? st.error : null;
-
-    return pickError(s.tasksState) ??
-        pickError(s.updateTaskState) ??
-        pickError(s.deleteOneState) ??
-        pickError(s.deleteRangeState);
-  });
-
-  Widget _buildList(Key key, HomeViewModel notifier, HomeViewModelState vm) {
-    return TasksListView(
-      key: key,
-      tasks: vm.visibleTasks,
-      selectedTasksIDs: vm.selectedTasksIDs.toList(),
-      isSelectionMode: vm.isSelectionMode,
-      toggleSelection: notifier.toggleSelection,
-      startSelection: notifier.startSelection,
-      setDone: notifier.setDone,
-      onEdit: (task) => onEdit(task.id),
-      onDelete: (id) async => await onDelete(notifier, id),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final vm = ref.watch(homeViewModelProvider);
@@ -107,23 +72,7 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
     ref.listen<Failure?>(homeErrorProvider, (prev, next) {
       if (next != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Icon(Icons.error, color: Theme.of(context).colors.textLight),
-                  SizedBox(width: 8),
-                  Text(
-                    next.message,
-                    style: AppTextStyles.body1Regular.copyWith(
-                      color: Theme.of(context).colors.textLight,
-                    ),
-                  ),
-                ],
-              ),
-              backgroundColor: Theme.of(context).colors.error,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(CustomSnackbars.error(context, next.message));
           final n = ref.read(homeViewModelProvider.notifier);
           n.clearErrors();
         });
@@ -131,50 +80,7 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
     });
 
     return Scaffold(
-      appBar: AppBar(
-        key: const ValueKey('selection-appbar'),
-        leading: vm.isSelectionMode
-            ? IconButton(
-                icon: Icon(Icons.close, color: Theme.of(context).colors.textPrimary),
-                onPressed: notifier.clearSelection,
-                tooltip: 'cancel_selection',
-              )
-            : null,
-        title: vm.isSelectionMode
-            ? Text(
-                '${vm.selectedTasksIDs.length} selecteds',
-                style: AppTextStyles.body1Regular.copyWith(
-                  color: Theme.of(context).colors.textPrimary,
-                ),
-              )
-            : null,
-        actions: vm.isSelectionMode
-            ? [
-                IconButton(
-                  tooltip: 'delete_selecteds',
-                  icon: Icon(Icons.delete, color: Theme.of(context).colors.error),
-                  onPressed: vm.selectedTasksIDs.isEmpty
-                      ? null
-                      : () async {
-                          final pendingController = PendingCommandController();
-                          final ids = vm.selectedTasksIDs.toList();
-                          final cmd = DeleteRangeCommand(
-                            ids: ids,
-                            removeByIdsOptimistic: notifier.removeByIdsOptimistic,
-                            restoreTasks: notifier.restoreTasks,
-                            commitDeleteRange: notifier.commitDeleteRange,
-                          );
-
-                          await pendingController.start(
-                            context: context,
-                            command: cmd,
-                            message: '${ids.length} tasks_deleted',
-                          );
-                        },
-                ),
-              ]
-            : [],
-      ),
+      appBar: HomeAppBar(viewModel: vm, notifier: notifier),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -187,7 +93,7 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: Text(
-                  'Bem Vindo ao\nInicie To-do!',
+                  'wellcome_to_task_to_do',
                   style: AppTextStyles.h5.copyWith(color: Theme.of(context).colors.textPrimary),
                 ),
               ),
@@ -240,9 +146,27 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
               child: TabBarView(
                 controller: _controller,
                 children: [
-                  _buildList(const PageStorageKey('tab_all'), notifier, vm),
-                  _buildList(const PageStorageKey('tab_completed'), notifier, vm),
-                  _buildList(const PageStorageKey('tab_pending'), notifier, vm),
+                  TasksListTab(
+                    notifier: notifier,
+                    vm: vm,
+                    list: vm.allTasks,
+                    title: 'all_tasks',
+                    key: const PageStorageKey('tab_all'),
+                  ),
+                  TasksListTab(
+                    notifier: notifier,
+                    vm: vm,
+                    list: vm.pendingTasks,
+                    title: 'pending',
+                    key: const PageStorageKey('tab_pending'),
+                  ),
+                  TasksListTab(
+                    notifier: notifier,
+                    vm: vm,
+                    list: vm.completedTasks,
+                    title: 'completed',
+                    key: const PageStorageKey('tab_completed'),
+                  ),
                 ],
               ),
             ),
@@ -250,7 +174,12 @@ class _HomeViewState extends ConsumerState<HomeView> with SingleTickerProviderSt
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final changed = await context.pushNamed<bool>(AppRoutes.newTask);
+          if (changed == true) {
+            ref.read(homeViewModelProvider.notifier).loadAllData();
+          }
+        },
         elevation: 0,
         backgroundColor: Theme.of(context).colors.primary,
         shape: CircleBorder(),

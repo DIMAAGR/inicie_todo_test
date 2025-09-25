@@ -62,7 +62,9 @@ class HomeViewModelState extends Equatable {
     );
   }
 
-  List<TaskEntity> get visibleTasks => filter.apply(tasks);
+  List<TaskEntity> get allTasks => tasks;
+  List<TaskEntity> get pendingTasks => PendingTasksFilter().apply(tasks);
+  List<TaskEntity> get completedTasks => CompletedTasksFilter().apply(tasks);
 
   @override
   List<Object?> get props => [
